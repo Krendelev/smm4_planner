@@ -1,6 +1,6 @@
 # SMM planner
 
-Plan your media campaing and post to [VKontakte](https://vk.com), [Facebook](https://facebook.com) and [Telegram](https://telegram.org/).
+Plan your media campaign and post to [VKontakte](https://vk.com), [Facebook](https://facebook.com) and [Telegram](https://telegram.org/).
 
 ## How to install
 
@@ -14,6 +14,8 @@ pip install -r requirements.txt
 ## Usage
 
 Lay out your plan in Google Sheets. It should look like this:
+
+
 ВКонтакте | Телеграм | Фейсбук | День | Время | Статья | Картинки | Опубликовано
 --------- | -------- | ------- | --------------- | ---------------- | ------ | -------- |--------------
 да  | нет | да | понедельник | 14 | ссылка | ссылка | нет
