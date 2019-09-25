@@ -1,3 +1,5 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d094218b87e640ddae86c9af5acf5454)](https://www.codacy.com/manual/Krendelev/smm4_planner?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Krendelev/smm4_planner&amp;utm_campaign=Badge_Grade)
+
 # SMM planner
 
 Plan your media campaign and post to [VKontakte](https://vk.com), [Facebook](https://facebook.com) and [Telegram](https://telegram.org/).
