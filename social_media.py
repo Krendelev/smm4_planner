@@ -3,7 +3,6 @@ import os
 
 import requests
 import telegram
-from dotenv import load_dotenv
 
 
 def get_upload_url(payload):

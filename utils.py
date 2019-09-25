@@ -11,7 +11,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
-from data_providers import PubData, Record, files, spreadsheet
+from data_providers import PubData, Record, files
 from settings import TRUTH, WEEKDAYS
 from social_media import post_to_fb, post_to_tg, post_to_vk
 
@@ -101,7 +101,7 @@ def download_file(request):
     downloader = MediaIoBaseDownload(result, request)
     done = False
     while done is False:
-        status, done = downloader.next_chunk()
+        _, done = downloader.next_chunk()
     return result
 
 
@@ -120,15 +120,13 @@ def update_record(scope, range_):
     published = {val: key for key, val in TRUTH.items()}
     name, pos = split_range(range_)
     value_range_body = {"values": [[published[True]]]}
-    request = (
-        discovery_resource.values().update(
-            spreadsheetId=scope.id,
-            range=f"{name}!H{pos}:H{pos}",
-            valueInputOption="RAW",
-            body=value_range_body,
-        )
-    ).execute()
-
+    request = discovery_resource.values().update(
+        spreadsheetId=scope.id,
+        range=f"{name}!H{pos}:H{pos}",
+        valueInputOption="RAW",
+        body=value_range_body,
+    )
+    request.execute()
     return None
 
 
