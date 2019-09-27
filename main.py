@@ -32,7 +32,8 @@ except HttpError as error:
 for record in records:
     if not (record.text or record.photo) or TRUTH[record.published]:
         continue
-    publication = utils.extract_data(record)
+
+    publication = utils.make_publication(record)
 
     post = {}
     for media, callback in CALLBACKS.items():

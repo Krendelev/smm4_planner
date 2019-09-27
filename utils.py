@@ -63,7 +63,7 @@ def get_records(scope):
         yield Record._make(record[0])
 
 
-def extract_data(record):
+def make_publication(record):
     channels = [
         channel[0]
         for channel in zip(
@@ -91,7 +91,7 @@ def get_photo_request(service, file_id):
     return service.files().get_media(fileId=file_id)
 
 
-def get_photo_name(service, file_id):
+def get_file_name(service, file_id):
     file_info = service.files().get(fileId=file_id, fields="name").execute()
     return file_info["name"]
 
@@ -107,10 +107,9 @@ def download_file(request):
 
 def get_media(file_id, callback):
     service = get_service(files)
-    bytes_io = file_id and download_file(callback(service, file_id)) or None
-    if "photo" in callback.__name__ and file_id:
-        bytes_io.name = get_photo_name(service, file_id)
-    return bytes_io
+    media = file_id and download_file(callback(service, file_id)) or None
+    media.name = get_file_name(service, file_id)
+    return media
 
 
 def update_record(scope, range_):
@@ -142,11 +141,12 @@ def get_delay(weekday, hour):
     delta = datetime.timedelta(days=days)
     fin_time = datetime.time(hour=hour)
     fin_date = datetime.datetime.combine(today + delta, fin_time)
-    return int(fin_date.timestamp() - today.timestamp())
+    delay = int(fin_date.timestamp() - today.timestamp())
+    return delay if delay > 0 else 0
 
 
 def split_range(range_):
     name, boundaries = range_.split("!")  # "Лист1!A3:H"
     start, _ = boundaries.split(":")
-    start = start.lstrip(string.ascii_uppercase)
-    return name, int(start)
+    start = int(start.lstrip(string.ascii_uppercase))
+    return name, start
