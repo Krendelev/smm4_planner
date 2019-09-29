@@ -64,14 +64,10 @@ def get_records(scope):
 
 
 def make_publication(record):
-    channels = [
-        channel[0]
-        for channel in zip(
-            (post_to_vk, post_to_tg, post_to_fb),
-            (TRUTH[record.vk], TRUTH[record.tg], TRUTH[record.fb]),
-        )
-        if all(channel)
-    ]
+    channels = itertools.compress(
+        (post_to_vk, post_to_tg, post_to_fb),
+        (TRUTH[record.vk], TRUTH[record.tg], TRUTH[record.fb]),
+    )
     pub_data = PubData(
         range=record.range,
         channels=channels,
