@@ -1,4 +1,9 @@
+import os
 from collections import namedtuple
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 Scope = namedtuple("Scope", ["name", "scopes", "id", "range", "params"])
 Record = namedtuple(
@@ -10,8 +15,8 @@ PubData = namedtuple("PubData", ["range", "channels", "text", "photo", "delay"])
 spreadsheet = Scope(
     name="spreadsheets",
     scopes=["https://www.googleapis.com/auth/spreadsheets"],
-    id="1Te65OZgashZL52MQAVFAj7W6oC1GVaY-hxr336D5q1o",
-    range="Лист1!A3:H",
+    id=os.environ["SPREADSHEET_ID"],
+    range=os.environ["SPREADSHEET_RANGE"],
     params=["sheets", "v4"],
 )
 

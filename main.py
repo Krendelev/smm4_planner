@@ -8,7 +8,7 @@ from googleapiclient.errors import HttpError
 
 import utils
 from data_providers import spreadsheet
-from settings import TRUTH
+from settings import MARK, TRUTH
 
 
 CALLBACKS = {"text": utils.get_text_request, "photo": utils.get_photo_request}
@@ -30,7 +30,7 @@ except HttpError as error:
     exit(error)
 
 for record in records:
-    if not (record.text or record.photo) or TRUTH[record.published]:
+    if not (record.text or record.photo) or record.published == MARK[True]:
         continue
 
     publication = utils.make_publication(record)

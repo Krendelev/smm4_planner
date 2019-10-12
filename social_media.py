@@ -5,18 +5,24 @@ import requests
 import telegram
 
 
+def check_vk_response(response):
+    if "error" in response:
+        raise requests.HTTPError(response["error"]["error_msg"])
+    return None
+
+
 def get_upload_url(payload):
     url = "https://api.vk.com/method/photos.getWallUploadServer"
     params = {**payload, "group_id": os.environ["VK_GROUP_ID"]}
     response = requests.get(url, params=params)
-    response.raise_for_status()
+    check_vk_response(response)
     return response.json()["response"]["upload_url"]
 
 
 def upload_picture(url, image):
     files = {"photo": (image.name, image.getvalue())}
     response = requests.post(url, files=files)
-    response.raise_for_status()
+    check_vk_response(response)
     return response.json()
 
 
@@ -30,7 +36,7 @@ def save_picture(payload, upload_info):
         "hash": upload_info["hash"],
     }
     response = requests.post(url, params=params)
-    response.raise_for_status()
+    check_vk_response(response)
     return response.json()["response"][0]
 
 
@@ -45,7 +51,7 @@ def post_to_wall(payload, attachment, text):
         "message": text,
     }
     response = requests.post(url, headers=headers, data=params)
-    response.raise_for_status()
+    check_vk_response(response)
     return None
 
 

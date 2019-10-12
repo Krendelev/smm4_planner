@@ -1,4 +1,5 @@
 TRUTH = {"да": True, "нет": False}
+MARK = {True: "да", False: "нет"}
 
 WEEKDAYS = {
     "понедельник": 0,

@@ -12,7 +12,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
 from data_providers import PubData, Record, files
-from settings import TRUTH, WEEKDAYS
+from settings import MARK, TRUTH, WEEKDAYS
 from social_media import post_to_fb, post_to_tg, post_to_vk
 
 
@@ -112,9 +112,8 @@ def update_record(scope, range_):
     service = get_service(scope)
     discovery_resource = getattr(service, scope.name)()
 
-    published = {val: key for key, val in TRUTH.items()}
     name, pos = split_range(range_)
-    value_range_body = {"values": [[published[True]]]}
+    value_range_body = {"values": [[MARK[True]]]}
     request = discovery_resource.values().update(
         spreadsheetId=scope.id,
         range=f"{name}!H{pos}:H{pos}",
