@@ -1,4 +1,4 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d094218b87e640ddae86c9af5acf5454)](https://www.codacy.com/manual/Krendelev/smm4_planner?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Krendelev/smm4_planner&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d094218b87e640ddae86c9af5acf5454)](https://www.codacy.com/manual/Krendelev/smm4_planner?utm_source=github.com&utm_medium=referral&utm_content=Krendelev/smm4_planner&utm_campaign=Badge_Grade)
 
 # SMM planner
 
@@ -21,7 +21,7 @@ Lay out your plan in Google Sheets. It should look like this:
 | --------- | -------- | ------- | ----------- | ----- | ------ | -------- | ------------ |
 | да        | нет      | да      | понедельник | 14    | ссылка | ссылка   | нет          |
 
-You can append info to the table while script is running.
+Get spreadsheet `id` from its URL in browser and put it in the `env` file. Put there actual data range in A1 notation also. You can append info to the table while script is running.
 
 Upload text and image files to be posted to Google Drive. Images should be in `jpg`, `png` or `gif` format. Put links to the files in the table.
 
@@ -34,6 +34,8 @@ TELEGRAM_TOKEN=replace_with_token
 CHANNEL_ID=-replace_with_channel_id
 VK_ACCESS_TOKEN=replace_with_token
 VK_GROUP_ID=replace_with_group_id
+SPREADSHEET_ID=replace_with_id
+SPREADSHEET_RANGE=replace_with_range
 ```
 
 Run `main.py`.
