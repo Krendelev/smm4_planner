@@ -1,4 +1,5 @@
 TRUTH = {"да": True, "нет": False}
+
 MARK = {True: "да", False: "нет"}
 
 WEEKDAYS = {
@@ -10,3 +11,7 @@ WEEKDAYS = {
     "суббота": 5,
     "воскресенье": 6,
 }
+
+BOUNDARY = 660
+
+DELAY = 600

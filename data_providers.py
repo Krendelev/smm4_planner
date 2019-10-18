@@ -10,7 +10,7 @@ Record = namedtuple(
     "Record",
     ["vk", "tg", "fb", "pub_day", "pub_time", "text", "photo", "published", "range"],
 )
-PubData = namedtuple("PubData", ["range", "channels", "text", "photo", "delay"])
+PubData = namedtuple("PubData", ["range", "channels", "text", "photo"])
 
 spreadsheet = Scope(
     name="spreadsheets",

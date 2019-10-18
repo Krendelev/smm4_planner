@@ -12,7 +12,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
 from data_providers import PubData, Record, files
-from settings import MARK, TRUTH, WEEKDAYS
+from settings import BOUNDARY, MARK, TRUTH, WEEKDAYS
 from social_media import post_to_fb, post_to_tg, post_to_vk
 
 
@@ -44,7 +44,7 @@ def get_service(scope):
     return service
 
 
-def get_records(scope):
+def fetch_records(scope):
     service = get_service(scope)
     discovery_resource = getattr(service, scope.name)()
 
@@ -63,6 +63,13 @@ def get_records(scope):
         yield Record._make(record[0])
 
 
+def get_record(records):
+    for record in records:
+        if (record.text or record.photo) and record.published != MARK[True]:
+            return record
+    return None
+
+
 def make_publication(record):
     channels = itertools.compress(
         (post_to_vk, post_to_tg, post_to_fb),
@@ -73,7 +80,6 @@ def make_publication(record):
         channels=channels,
         text=get_id(record.text),
         photo=get_id(record.photo),
-        delay=get_delay(record.pub_day, record.pub_time),
     )
     return pub_data
 
@@ -103,7 +109,7 @@ def download_file(request):
 
 def get_media(file_id, callback):
     service = get_service(files)
-    media = file_id and download_file(callback(service, file_id)) or None
+    media = download_file(callback(service, file_id))
     media.name = get_file_name(service, file_id)
     return media
 
@@ -130,18 +136,21 @@ def get_id(text):
     return found[0] if found else None
 
 
-def get_delay(weekday, hour):
+def pub_datetime(weekday, hour):
     today = datetime.datetime.today()
-    days = (WEEKDAYS[weekday] - today.weekday() + 7) % 7
-    delta = datetime.timedelta(days=days)
-    fin_time = datetime.time(hour=hour)
-    fin_date = datetime.datetime.combine(today + delta, fin_time)
-    delay = int(fin_date.timestamp() - today.timestamp())
-    return delay if delay > 0 else 0
+    days_ahead = (WEEKDAYS[weekday] - today.weekday() + 7) % 7
+    delta = datetime.timedelta(days=days_ahead)
+    pub_time = datetime.time(hour=hour)
+    return datetime.datetime.combine(today + delta, pub_time)
+
+
+def time_is_now(then):
+    now = datetime.datetime.today()
+    return (now - then).seconds < BOUNDARY
 
 
 def split_range(range_):
-    name, boundaries = range_.split("!")  # "Лист1!A3:H"
+    name, boundaries = range_.split("!")
     start, _ = boundaries.split(":")
     start = int(start.lstrip(string.ascii_uppercase))
     return name, start
