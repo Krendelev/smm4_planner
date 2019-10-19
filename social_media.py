@@ -14,16 +14,16 @@ def check_vk_response(response):
 def get_upload_url(payload):
     url = "https://api.vk.com/method/photos.getWallUploadServer"
     params = {**payload, "group_id": os.environ["VK_GROUP_ID"]}
-    response = requests.get(url, params=params)
+    response = requests.get(url, params=params).json()
     check_vk_response(response)
-    return response.json()["response"]["upload_url"]
+    return response["response"]["upload_url"]
 
 
 def upload_picture(url, image):
     files = {"photo": (image.name, image.getvalue())}
-    response = requests.post(url, files=files)
+    response = requests.post(url, files=files).json()
     check_vk_response(response)
-    return response.json()
+    return response
 
 
 def save_picture(payload, upload_info):
@@ -35,9 +35,9 @@ def save_picture(payload, upload_info):
         "photo": upload_info["photo"],
         "hash": upload_info["hash"],
     }
-    response = requests.post(url, params=params)
+    response = requests.post(url, params=params).json()
     check_vk_response(response)
-    return response.json()["response"][0]
+    return response["response"][0]
 
 
 def post_to_wall(payload, attachment, text):
@@ -50,7 +50,7 @@ def post_to_wall(payload, attachment, text):
         "attachments": attachment,
         "message": text,
     }
-    response = requests.post(url, headers=headers, data=params)
+    response = requests.post(url, headers=headers, data=params).json()
     check_vk_response(response)
     return None
 
