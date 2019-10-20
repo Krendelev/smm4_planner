@@ -8,7 +8,7 @@ from googleapiclient.errors import HttpError
 
 import utils
 from data_providers import spreadsheet
-from settings import DELAY, MARK, TRUTH
+from settings import DELAY
 
 
 CALLBACKS = {"text": utils.get_text_request, "photo": utils.get_photo_request}

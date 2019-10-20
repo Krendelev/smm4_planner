@@ -12,7 +12,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
 from data_providers import PubData, Record, files
-from settings import BOUNDARY, MARK, TRUTH, WEEKDAYS
+from settings import BOUNDARY, MARK, WEEKDAYS
 from social_media import post_to_fb, post_to_tg, post_to_vk
 
 
@@ -48,19 +48,16 @@ def fetch_records(scope):
     service = get_service(scope)
     discovery_resource = getattr(service, scope.name)()
 
-    name, start = split_range(scope.range)
-    for num in itertools.count(start=start):
-        range_ = f"{name}!{num}:{num}"
-        result = (
-            discovery_resource.values()
-            .get(spreadsheetId=scope.id, range=range_, valueRenderOption="FORMULA")
-            .execute()
-        )
-        record = result.get("values", [])
-        if not record:
-            break
-        record[0].append(range_)
-        yield Record._make(record[0])
+    result = (
+        discovery_resource.values()
+        .get(spreadsheetId=scope.id, range=scope.range, valueRenderOption="FORMULA")
+        .execute()
+    )
+    records = result.get("values", [])
+    _, start = split_range(scope.range)
+    for num, record in enumerate(records, start=start):
+        record.append(num)
+        yield Record._make(record)
 
 
 def get_record(records):
@@ -71,10 +68,13 @@ def get_record(records):
 
 
 def make_publication(record):
-    channels = itertools.compress(
-        (post_to_vk, post_to_tg, post_to_fb),
-        (TRUTH[record.vk], TRUTH[record.tg], TRUTH[record.fb]),
-    )
+    channels = [
+        channel[1]
+        for channel in zip(
+            (record.vk, record.tg, record.fb), (post_to_vk, post_to_tg, post_to_fb)
+        )
+        if channel[0] == MARK[True]
+    ]
     pub_data = PubData(
         range=record.range,
         channels=channels,
@@ -114,11 +114,11 @@ def get_media(file_id, callback):
     return media
 
 
-def update_record(scope, range_):
+def update_record(scope, pos):
     service = get_service(scope)
     discovery_resource = getattr(service, scope.name)()
 
-    name, pos = split_range(range_)
+    name, _ = split_range(scope.range)
     value_range_body = {"values": [[MARK[True]]]}
     request = discovery_resource.values().update(
         spreadsheetId=scope.id,
