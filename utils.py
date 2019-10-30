@@ -1,6 +1,5 @@
 import datetime
 import io
-import itertools
 import os
 import pickle
 import re
